@@ -47,18 +47,31 @@ function getKeyIndexFromCode(code) {
   return null;
 }
 
+let sending = false;
+let sendAgain = false;
+
 async function sendKeyboardState() {
-  if (!connected || !commandEventCharacteristic) {
-    return;
-  }
+    if (sending) {
+        sendAgain = true;
+        return;
+    }
 
-  const keyBytes = keysToBytes();
+    sending = true;
 
-  const packet = new Uint8Array(1 + NUM_BYTES);
-  packet[0] = COMMAND_WRITE_STDIN;
-  packet.set(keyBytes, 1);
+    do {
+        sendAgain = false;
 
-  await commandEventCharacteristic.writeValueWithResponse(packet);
+        const keyBytes = keysToBytes();
+
+        const packet = new Uint8Array(1 + NUM_BYTES);
+        packet[0] = COMMAND_WRITE_STDIN;
+        packet.set(keyBytes, 1);
+
+        await commandEventCharacteristic.writeValueWithResponse(packet);
+
+    } while (sendAgain);
+
+    sending = false;
 }
 
 function setKeyState(event, isPressed) {
@@ -108,6 +121,7 @@ function handlePybricksNotification(event) {
 
   if (text === "rdy") {
     sendKeyboardState();
+    console.log("sending keyboard state")
   } else {
     console.log("Hub:", text);
   }
@@ -127,10 +141,10 @@ async function connectToHub() {
     commandEventCharacteristic = null;
     console.log("Disconnected.");
 
-    hubStatus.style.backgroundColor = "palevioletred";
-    hubStatus.textContent = "Hub Disconnected";
+    connectionDisplay.style.backgroundColor = "palevioletred";
+    connectionDisplay.textContent = "Hub Disconnected";
 
-    //instructions.style.textContent = "Exit program on hub and ensure the Bluetooth light is flashing.";
+    instructionsDisplay.textContent = "Exit program on hub and ensure the Bluetooth light is flashing.";
   });
 
   const server = await device.gatt.connect();
@@ -151,10 +165,10 @@ async function connectToHub() {
   );
 
   connected = true;
-  hubStatus.style.backgroundColor = "palegreen";
-  hubStatus.textContent = "Hub Connected";
+  connectionDisplay.style.backgroundColor = "palegreen";
+  connectionDisplay.textContent = "Hub Connected";
 
-  //instructions.style.textContent = "Start program to control with keyboard.";
+  instructionsDisplay.textContent = "Start program to control with keyboard.";
 
   console.log("Connected. Start the Pybricks program on the hub.");
 }
