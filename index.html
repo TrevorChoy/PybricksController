@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Pybricks Keyboard Controller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+      background-color: #252525;
+    }
+
+    button {
+      font-size: 1rem;
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      margin-right: 0.5rem;
+    }
+  </style>
+  <script src = index.js></script>
+</head>
+
+<body>
+  <h1 style = "border-radius: 10px; padding: 5px; text-align: center; background-color: #353535; ; color: white">Pybricks Keyboard Control</h1>
+  <p id = hubStatus style = "background-color:palevioletred; border-radius: 10px; padding: 5px;">Hub Disconnected</p>
+  <!-- <p id = instructions style = "background-color:#353535; border-radius: 10px; padding: 5px;">Exit program on hub and ensure the Bluetooth light is flashing.</p> -->
+  <button onclick="connectToHub()">Connect to Hub</button>
+  <!-- <div style = "border-radius: 10px; padding: 5px; text-align: center; background-color: #353535; color: white">Keys Pressed:
+    <p id = keysPressed style = "background-color:#202020; border-radius: 10px; padding: 5px; ; color: white"></p>
+  </div> -->
+    
+</body>
+
+</html>
